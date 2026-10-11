@@ -17,7 +17,7 @@ flowchart LR
     UC -.governs.-> G
 ```
 
-![Pipeline run](docs/images/adf_pipeline_run.png)
+![Pipeline run](docs/images/adf_pipeline_run2.png)
 
 ## Dataset
 
