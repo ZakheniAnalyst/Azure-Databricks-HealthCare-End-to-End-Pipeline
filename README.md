@@ -76,9 +76,9 @@ The Data Factory pipeline ends with a **Databricks Job activity** that starts on
 
 **Highest-cost conditions:** normal pregnancy (2.84M total across 28 patients), medication review due (637.9K, 108 patients) and gingival disease (405.7K, 51 patients).
 
-**30-day readmission rate:** _add your figures from `display(readmit)` here_
 
-**Diabetic cohort:** _add the cohort size from `diabetic_cohort` here_
+
+
 
 ![Gold tables](docs/images/gold_results.png)
 
@@ -95,23 +95,8 @@ The Data Factory pipeline ends with a **Databricks Job activity** that starts on
 - **Serverless-only Databricks workspace.** No classic clusters were available, so storage access uses an **access connector** with a managed identity (Storage Blob Data Contributor) and Unity Catalog external locations. Orchestration uses the newer **Job activity** instead of the legacy Notebook activity, which needs a classic cluster.
 - **File events warning.** Creating the external locations showed optional file-event checks failing. Read, write, list and delete all passed, and file events are not needed for this workload.
 
-## Reproduce it
-1. Create a resource group, a storage account with **hierarchical namespace enabled** (containers `bronze`, `silver`, `gold`), a Data Factory and an Azure Databricks workspace (Premium tier).
-2. Create an **Access Connector for Azure Databricks**, grant it **Storage Blob Data Contributor** on the storage account, then create a Unity Catalog storage credential and external locations for the three containers.
-3. Put the CSVs in `datasets/` of a public GitHub repo and import the Data Factory pipeline from `adf/` (or rebuild it from the stages above).
-4. Import `notebooks/01_bronze_to_silver` into Databricks and create a job that runs it on serverless compute.
-5. Add an Azure Databricks linked service (Serverless option) and a Job activity pointing at that job. Run the pipeline.
 
-> **Security:** never commit access tokens or storage keys. The Databricks token used by Data Factory is short-lived (30 days) and should be rotated or replaced with managed identity authentication in a production setup.
 
-## Repository structure
-```
-├── datasets/          # 18 Synthea CSVs (claims_transactions is gzipped)
-├── notebooks/         # Databricks notebook (bronze → silver → gold)
-├── adf/               # Exported ARM template of the Data Factory
-├── docs/images/       # Screenshots used in this README
-└── README.md
-```
 
 ## Tech stack
 Azure Data Factory · Azure Data Lake Storage Gen2 · Azure Databricks (serverless) · Delta Lake · Unity Catalog · PySpark · Synthea synthetic data
